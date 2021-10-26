@@ -1,2 +1,2 @@
 cmake_minimum_required(VERSION 3.10)
-add_executable(ivy main.c)
+add_executable(ivy main.c lexer.c)
