@@ -47,6 +47,7 @@ void lexer_adv(lexer *l) {
 
 token lexer_get_number(lexer *l) {
   char *start = l->curr;
+  size_t loc_start = l->loc;
   size_t size = 0;
   for (; *l->curr != '\0' && isdigit(*l->curr); lexer_adv(l)) {
     ++size;
@@ -58,11 +59,13 @@ token lexer_get_number(lexer *l) {
   return (token) {
     .kind = TOKEN_INTEGER,
     .value = val,
+    .loc = loc_start,
   };
 }
 
 token lexer_get_word(lexer *l) {
   char *start = l->curr;
+  size_t loc_start = l->loc;
   size_t size = 0;
   for (; *l->curr != '\0' && (isalnum(*l->curr) || *l->curr == '_');
        lexer_adv(l)) {
@@ -75,12 +78,14 @@ token lexer_get_word(lexer *l) {
   return (token) {
     .kind = TOKEN_WORD,
     .value = val,
+    .loc = loc_start,
   };
 }
 
 token lexer_get_custom(lexer *l, token_kind t_kind) {
+  size_t t_loc = l->loc;
   lexer_adv(l);
-  return (token) { .kind = t_kind, .value = NULL, };
+  return (token) { .kind = t_kind, .value = NULL, .loc = t_loc };
 }
 
 token lexer_get_token(lexer *l) {

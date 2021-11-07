@@ -12,8 +12,9 @@ typedef enum {
 } token_kind;
 
 typedef struct {
-  token_kind kind; // TODO: Add locations
+  token_kind kind;
   char* value; 
+  size_t loc;
 } token;
 
 const char *token_kind_as_str(token_kind kind);
