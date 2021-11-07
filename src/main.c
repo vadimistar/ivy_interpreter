@@ -8,6 +8,9 @@
 void evaluate(char *input) {
   lexer t_lexer = lexer_init(input);  
   parser t_parser = parser_init(t_lexer);
+  ast_node *t_expr = parser_parse_expr(&t_parser); 
+  if (t_expr != NULL) { ast_free(t_expr); }
+   
   parser_free(&t_parser);
 }
 
