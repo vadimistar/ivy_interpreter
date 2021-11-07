@@ -1,4 +1,5 @@
 #include "../include/lexer.h"
+#include "../include/parser.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -6,15 +7,12 @@
 
 void evaluate(char *input) {
   lexer t_lexer = lexer_init(input);  
-  while (*t_lexer.curr != '\n') {
-    token t_token = lexer_get_token(&t_lexer); 
-    printf("%s\t%s\n", token_kind_as_str(t_token.kind), token_value(&t_token));        
-    token_free(&t_token);    
-  }
+  parser t_parser = parser_init(t_lexer);
+  parser_free(&t_parser);
 }
 
 int main() {
-  puts( "Ivy (version 0.1)\n"
+  puts( "Ivy (version 0.1)\n" 
         "Type 'q' for quit\n"); 
   while (1) {
     printf("> ");
