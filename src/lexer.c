@@ -104,7 +104,7 @@ begin:
     if (isalpha(*l->curr)) {
       return lexer_get_word(l);
     }
-    fprintf(stderr, "%lu: ERROR: Unknown character: %c",
+    fprintf(stderr, "%lu: ERROR: Unknown character: %c\n",
         l->loc, *l->curr);
     exit(1);
   }
@@ -112,4 +112,8 @@ begin:
     .kind = TOKEN_EOF,
     .value = NULL,
   };
+}
+
+int lexer_not_end_of_line(lexer *l) {
+  return *(l->curr) != '\n';
 }

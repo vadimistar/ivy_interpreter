@@ -12,7 +12,7 @@ typedef enum {
 } token_kind;
 
 typedef struct {
-  token_kind kind;
+  token_kind kind; // TODO: Add locations
   char* value; 
 } token;
 
@@ -33,5 +33,6 @@ token lexer_get_word(lexer *l);
 token lexer_get_custom(lexer *l, token_kind t_kind);
 
 token lexer_get_token(lexer *l);
+int lexer_not_end_of_line(lexer *l);
 
 #endif//IVY_LEXER_H
