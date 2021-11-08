@@ -10,7 +10,6 @@ typedef enum {
   NULL_AST,
   INTEGER_AST,
   BINARY_OP_AST,
-  UNARY_OP_AST,
 } ast_kind;
 
 struct ast_node {
@@ -19,6 +18,7 @@ struct ast_node {
   ast_node *left;
   ast_node *right;
   ast_kind kind;
+  size_t loc;
 }; 
 
 ast_node *null_ast_init();
