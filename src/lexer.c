@@ -24,7 +24,7 @@ const char *token_kind_as_str(token_kind kind) {
 
 void token_free(token *t) {
   if (t->value != NULL) {
-    free(t->value);
+    free(t->value); 
   }
 }
 
