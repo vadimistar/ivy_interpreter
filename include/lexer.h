@@ -3,6 +3,8 @@
 
 #include <stddef.h>
 
+typedef size_t loc_t;
+
 typedef enum {
   TOKEN_EOF,
   TOKEN_PLUS,
@@ -14,7 +16,7 @@ typedef enum {
 typedef struct {
   token_kind kind;
   char *value; 
-  size_t loc;
+  loc_t loc;
 } token;
 
 const char *token_kind_as_str(token_kind kind);
@@ -23,7 +25,7 @@ const char *token_value(token *t);
 
 typedef struct {
   char* curr; 
-  size_t loc;
+  loc_t loc;
 } lexer;
 
 lexer lexer_init(char *raw);
