@@ -15,10 +15,10 @@ void evaluate(char *input) {
     ivy_value t_val = eval_expr(t_expr); 
     switch (t_val.kind) {
       case IVY_VALUE_INT:
-        printf("Output: %lu\n", t_val.as_int);
+        printf("%ld\n", t_val.as_int);
         break;
       case IVY_VALUE_FLOAT:
-        printf("Output: %f\n", t_val.as_float); 
+        printf("%f\n", t_val.as_float); 
         break;
       default:
         assert(0 && "this kind is not handled");
