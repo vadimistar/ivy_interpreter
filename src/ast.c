@@ -6,14 +6,13 @@ ast_node *null_ast_init() {
 }
 
 ast_node *ast_init(ast_kind kind) {
-  ast_node *node = (ast_node *) malloc(sizeof(ast_node));
+  ast_node *node = (ast_node *) calloc(1, sizeof(ast_node));
   node->kind = kind;
   return node;
 }
 
 ast_node *integer_ast_init(char *val) {
-  ast_node *node = null_ast_init();
-  node->kind = INTEGER_AST;
+  ast_node *node = ast_init(INTEGER_AST);
   node->value = val;
   return node;
 }

@@ -13,7 +13,7 @@ typedef enum {
 
 typedef struct {
   token_kind kind;
-  char* value; 
+  char *value; 
   size_t loc;
 } token;
 

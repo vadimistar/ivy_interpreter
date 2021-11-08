@@ -11,7 +11,6 @@ parser parser_init(lexer t_lexer) {
   while (lexer_not_end_of_line(&t_lexer)) {
     token t_token = lexer_get_token(&t_lexer); 
     ivy_list_push(&t_parser.tokens, &t_token);
-    token_free(&t_token);
   }
   token t_eof = (token) {
     .kind = TOKEN_EOF,
@@ -43,6 +42,9 @@ token *parser_next(parser *prs) {
 }
 
 void parser_free(parser *prs) {
+  for (size_t i = 0; i != prs->tokens.size; ++ i) {
+    token_free(ivy_list_get(&prs->tokens, i));  
+  }
   ivy_list_free(&prs->tokens);
 }
 
