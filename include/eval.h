@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include "ast.h"
-#include "utils.h"
 
 typedef enum {
   IVY_VALUE_NULL,

@@ -52,15 +52,40 @@ size_t parser_left(parser *prs) {
   return prs->tokens.size - prs->index; 
 }
 
+bool parser_match(parser *prs, token_kind t_kind) {
+  if (parser_curr(prs)->kind != t_kind) {
+    fprintf(stderr, "%lu: ERROR: Expected %s, but got %s\n", parser_curr(prs)->loc, token_kind_as_str(t_kind), token_kind_as_str(parser_curr(prs)->kind));
+    while (parser_curr(prs) != TOKEN_EOF) {
+      parser_move(prs); 
+    }
+    return false;  
+  }
+  parser_move(prs); 
+  return true;
+}
+
 ast_node *parser_parse_expr(parser *prs) {
   switch (parser_left(prs)) {
     case 1:
       fprintf(stderr, "%lu: ERROR: Got null expr\n", parser_curr(prs)->loc);
       return NULL;
-    case 2:
-      return parser_parse_integer(prs);
     default:
-      return parser_parse_binary_op(prs);
+      break;
+  }
+  switch (parser_curr(prs)->kind) {
+    case TOKEN_INTEGER:
+      //if (parser_left(prs) > 2 && is_binary_op(parser_peek(prs, 1)->kind)) {
+      //  return parser_parse_binary_op(prs);
+      //}
+      return parser_parse_integer(prs);
+    case TOKEN_LPAREN:
+      return parser_parse_paren_expr(prs);
+    case TOKEN_PLUS:
+    case TOKEN_MINUS:
+      return parser_parse_unary_op(prs);
+    default:
+      fprintf(stderr, "%lu: ERROR: Unknown expression", parser_curr(prs)->loc);
+      return NULL;
   }
 }
 
@@ -77,10 +102,14 @@ ast_node *parser_parse_integer(parser *prs) {
 
 ast_node *parser_parse_unary_op(parser *prs) {
   switch (parser_curr(prs)->kind) {
-    case TOKEN_WORD:
-      assert(0 && "not implemented");
-    case TOKEN_INTEGER:
-      return parser_parse_integer(prs);   
+    case TOKEN_PLUS:
+    case TOKEN_MINUS: {
+      ast_node *t_node = ast_init(UNARY_EXPR_AST); 
+      t_node->operand = parser_curr(prs)->kind;
+      parser_move(prs);
+      t_node->child = parser_parse_expr(prs);
+      return t_node;
+    }
     default:
       fprintf(stderr, "%lu: ERROR: Invalid unary expression: %s", 
         parser_curr(prs)->loc, token_kind_as_str(parser_curr(prs)->kind));     
@@ -102,7 +131,7 @@ ast_node *parser_parse_binary_op(parser *prs) {
       if (t_right == NULL) {
         return NULL;
       }
-      ast_node *t_expr = ast_init(BINARY_OP_AST);
+      ast_node *t_expr = ast_init(BINARY_EXPR_AST);
       t_expr->left = t_left;
       t_expr->operand = t_kind;
       t_expr->right = t_right;
@@ -115,4 +144,11 @@ ast_node *parser_parse_binary_op(parser *prs) {
   }
   parser_move(prs);
   return NULL;
+}
+
+ast_node *parser_parse_paren_expr(parser *prs) {
+  if (!parser_match(prs, TOKEN_LPAREN)) { return NULL; }
+  ast_node *t_expr = parser_parse_expr(prs);  
+  if (!parser_match(prs, TOKEN_RPAREN)) { return NULL; }
+  return t_expr;
 }

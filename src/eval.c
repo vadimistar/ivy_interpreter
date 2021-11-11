@@ -11,10 +11,12 @@ void stop_eval() {
 ivy_value eval_expr(ast_node *node) {
   if (node == NULL) { stop_eval(); }
   switch (node->kind) {
-    case BINARY_OP_AST:
+    case BINARY_EXPR_AST:
       return eval_binary_expr(node);   
     case INTEGER_AST:
       return eval_integer_ast(node);
+    case UNARY_EXPR_AST:
+      return eval_unary_expr(node);
     default:
       assert(0 && "node kind is not handled");
   }
@@ -77,11 +79,25 @@ ivy_value eval_binary_expr(ast_node *node) {
 
 ivy_value eval_unary_expr(ast_node *node) {
   if (node == NULL) { stop_eval(); }
-  switch (node->kind) {
-    case INTEGER_AST:
-      return eval_integer_ast(node);
+  switch (node->operand) {
+    case TOKEN_PLUS:
+      return eval_expr(node->child);
+    case TOKEN_MINUS: {
+      ivy_value val = eval_expr(node->child);
+      switch (val.kind) {
+        case IVY_VALUE_INT:
+          return ivy_value_int_init(-1 * val.as_int);
+        case IVY_VALUE_FLOAT:
+          return ivy_value_float_init(-1 * val.as_float);
+        case IVY_VALUE_NULL:
+          return val;
+        default:
+          assert(0 && "not implemented");
+      }
+      break;
+    }
     default:
-      assert(0 && "node kind is not handled");
+      assert(0 && "node operand is not handled");
   }
 }
 

@@ -26,3 +26,7 @@ void ast_free(ast_node *node) {
   }
   free(node);
 }
+
+bool is_binary_op(token_kind kind) {
+  return kind == TOKEN_PLUS || kind == TOKEN_MINUS;
+}

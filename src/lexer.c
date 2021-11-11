@@ -17,6 +17,10 @@ const char *token_kind_as_str(token_kind kind) {
     return "integer";
   case TOKEN_WORD:
     return "word";
+  case TOKEN_LPAREN:
+    return "'('";
+  case TOKEN_RPAREN:
+    return "')'";
   default:
     assert(0 && "token kind is not handled");
   }
@@ -24,7 +28,7 @@ const char *token_kind_as_str(token_kind kind) {
 
 void token_free(token *t) {
   if (t->value != NULL) {
-    free(t->value); 
+    free(t->value);
   }
 }
 
@@ -102,6 +106,10 @@ begin:
     return lexer_get_custom(l, TOKEN_PLUS);
   case '-':
     return lexer_get_custom(l, TOKEN_MINUS);
+  case '(':
+    return lexer_get_custom(l, TOKEN_LPAREN);
+  case ')':
+    return lexer_get_custom(l, TOKEN_RPAREN);
   default:
     if (isdigit(*l->curr)) {
       return lexer_get_number(l);

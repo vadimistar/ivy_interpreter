@@ -11,6 +11,8 @@ typedef enum {
   TOKEN_MINUS,
   TOKEN_INTEGER,
   TOKEN_WORD,
+  TOKEN_LPAREN,
+  TOKEN_RPAREN,
 } token_kind;
 
 typedef struct {
